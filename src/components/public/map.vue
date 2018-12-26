@@ -4,7 +4,7 @@
    v-on   cancel    取消时发出事件
 -->
 <template>
-  <div style="padding:10px; border:1px solid red">
+  <div style="padding:10px">
     <div
       @on-cancel="cancel"
       v-model="showMapComponent"
@@ -41,9 +41,9 @@
           style="width:0px;height:0px;overflow: hidden;"
         ></bm-local-search>
       </baidu-map>
-      <div slot="footer" style="margin-top: 0px;">
-        <Button @click="cancel" type="ghost" style="width: 60px;height: 36px;">取消</Button>
-        <Button type="primary" style="width: 60px;height: 36px;" @click="confirm">确定</Button>
+      <div slot="footer" style="margin-top: 10px;">  
+        <el-button class="btn-right" type="primary" @click="confirm" size="medium">确定</el-button>
+        <el-button class="btn-right" style="margin-right:20px" @click="cancel" type="ghost" size="medium">取消</el-button>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@ export default {
         width: "100%",
         height: this.mapHeight + "px"
       },
-      center: { lng: 116.404, lat: 39.915 },
+      center: { lng: 116.404, lat: 39.915 , address: "", list: false },
       zoom: 15
     };
   },
@@ -98,12 +98,13 @@ export default {
      * 地图点击事件。
      */
     getClickInfo(e) {
-      console.log(e);
+    //   console.log(e);
       this.center.lng = e.point.lng;
       this.center.lat = e.point.lat;
       let geocoder = new BMap.Geocoder();
       geocoder.getLocation(e.point, rs => {
-        console.log(rs);
+        this.center.address = rs.address;
+        this.center.list = true;
       });
     },
     syncCenterAndZoom(e) {
@@ -117,7 +118,6 @@ export default {
      */
     confirm: function() {
       this.showMapComponent = false;
-      console.log(this.center);
       this.$emit("map-confirm", this.center);
     },
     /***
@@ -125,7 +125,7 @@ export default {
      */
     cancel: function() {
       this.showMapComponent = false;
-      this.$emit("cancel", this.showMapComponent);
+      this.$emit("cancel", false);
     }
   }
 };
@@ -146,5 +146,9 @@ export default {
   -webkit-box-shadow: #666 0px 0px 10px;
   -moz-box-shadow: #666 0px 0px 10px;
   box-shadow: #666 0px 0px 10px;
+}
+
+.btn-right{
+    float: right;
 }
 </style>

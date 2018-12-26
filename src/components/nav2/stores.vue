@@ -101,7 +101,7 @@
             <el-time-select
               placeholder="起始时间"
               v-model="startTime"
-                :picker-options="{
+              :picker-options="{
                 start: '00:00',
                 step: '00:15',
                 end: '24:00'
@@ -121,7 +121,7 @@
           <el-form-item label="门店介绍：" :label-width="formLabelWidth">
             <el-input v-model="form.introduce" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="门店经度：" :label-width="formLabelWidth"> 
+          <el-form-item label="门店经度：" :label-width="formLabelWidth">
             <el-input v-model="form.longitude" autocomplete="off" readonly></el-input>
           </el-form-item>
           <el-form-item label="门店纬度：" :label-width="formLabelWidth">
@@ -134,14 +134,15 @@
         </div>
       </el-dialog>
     </div>
-    <el-dialog class="mapTankuang" title="门店地址" :visible.sync="dialogMap">
-      
+    <el-dialog class="mapTankuang" title="门店地址" :visible.sync="dialogMap" width="60%">
+      <mapinfor @map-confirm="getaddress" @cancel="mapQuxiao"></mapinfor>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { getstores, getstorelist, getstorestate } from "@/api/api";
+import mapinfor from "@/components/public/map";
 export default {
   data() {
     return {
@@ -159,9 +160,26 @@ export default {
       time1: ""
     };
   },
+  components: {
+    mapinfor
+  },
   methods: {
-    inforMap(){
-      console.log(1)
+    getaddress(e) {
+      // console.log(e);
+      if (e.list) {
+        this.form.address = e.address;
+        this.form.longitude = e.lng;
+        this.form.latitude = e.lat;
+        this.dialogMap = false;
+      } else{
+        this.dialogMap = false;
+      } 
+    },
+    //地图事件隐藏
+    mapQuxiao() {
+      this.dialogMap = false;
+    },
+    inforMap() {
       this.dialogMap = true;
     },
     // 编辑/新增按钮
@@ -246,6 +264,8 @@ export default {
         if (res.code == 1) {
           this.tableData = res.result.data;
           this.total = res.result.totalSize;
+        }else {
+          this.$message.error(res.msg);
         }
       });
     }
@@ -293,6 +313,5 @@ export default {
   padding-left: 20px;
   margin-top: 20px;
 }
-
 </style>
 

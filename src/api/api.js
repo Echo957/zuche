@@ -69,3 +69,42 @@ export const getstorestate = (opt) => request({
         status: opt.status
     })
 })
+
+//获取车辆列表
+export const getcarlist = (opt) => request({
+    method: 'POST',
+    url: '/mp/car/getCarsList',
+    data: qs.stringify({
+     })
+})
+
+//获取车辆类型
+export const getcartype = (opt) => request({
+    method: 'POST',
+    url: '/mp/car/getCarClassification',
+    data: qs.stringify({
+     })
+})
+
+//新建/编辑车辆
+export const getcarNew = (opt) => request({
+    method: 'POST',
+    url: '/mp/car/createCar',
+    data: qs.stringify({
+        cid: opt.cid,
+        name: opt.name,
+        licensePlate: opt.licensePlate,
+        picture: opt.picture,
+        structure: opt.structure,
+        displacement: opt.displacement,
+        gear: opt.gear,
+        seats: opt.seats,
+        subordinate: opt.subordinate,
+        carType: opt.carType,
+        depositPrice: opt.depositPrice,
+        rentPrice: opt.rentPrice,
+        servicePrice: opt.servicePrice,
+        insurancePrice: opt.insurancePrice,
+        otherPrice: opt.otherPrice
+     })
+})
