@@ -4,7 +4,7 @@
     <div class="content-one">
       <span>用户等级</span>
       <span>用户等级管理列表</span>
-      <span class="one-right" @click="dialogAdd()">
+      <span class="one-right" @click="handleClick()">
         <el-button style="background:#3598dc;color:white;border-radius:4%" size="mini">
           <i class="el-icon-circle-plus-outline btn-font">新增用户等级</i>
         </el-button>
@@ -82,24 +82,6 @@
           <el-button type="primary" @click="dialogFormFalse">确 定</el-button>
         </div>
       </el-dialog>
-      <!-- 新增用户等级 -->
-      <el-dialog title="编辑用户等级" :visible.sync="dialogFormAdd">
-        <el-form :model="form">
-          <el-form-item label="等级名称：" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="积分：" :label-width="formLabelWidth">
-            <el-input v-model="form.count" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="等级值" :label-width="formLabelWidth">
-            <el-input v-model="form.dengjizhi" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormAdd = false">取 消</el-button>
-          <el-button type="primary" @click="dialogAddFalse">确 定</el-button>
-        </div>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -134,32 +116,24 @@ export default {
       form: "",
       currentPage1: 5,
       dialogFormVisible: false,
-      formLabelWidth: "120px",
-      dialogFormAdd: false,
-      indexone:null
+      formLabelWidth: "120px"
     };
   },
   methods: {
     // 编辑按钮
-    handleClick(row, index) {
-      this.dialogFormVisible = true;
-      this.form = JSON.parse(JSON.stringify(row));
-      this.indexone = index;
+    handleClick(row, index) {   
+      debugger 
+      if (row) {
+        this.form = JSON.parse(JSON.stringify(row));
+        this.dialogFormVisible = true;
+      }else {
+        this.form = {};
+        this.dialogFormVisible = true;
+      }
     },
     // 修改数据
     dialogFormFalse() {
       this.dialogFormVisible = false;
-      this.$set(this.tableData, this.indexone, this.form);
-    },
-    // 新增按钮
-    dialogAdd() {
-      this.dialogFormAdd = true;
-      this.form = {};
-    },
-    // 增加数据
-    dialogAddFalse(){
-      this.dialogFormAdd = false;
-      this.tableData.push(this.form)
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);

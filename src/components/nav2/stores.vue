@@ -16,7 +16,7 @@
         >
           <i class="el-icon-refresh btn-font">刷新</i>
         </el-button>
-      </span> -->
+      </span>-->
     </div>
     <!-- 主干部分 -->
     <div class="content-two">
@@ -25,7 +25,7 @@
         <el-input placeholder="搜索..." v-model="input1">
           <el-button slot="append" icon="el-icon-search" @click="souSuo()"></el-button>
         </el-input>
-      </div> -->
+      </div>-->
       <!-- 列表 -->
       <div class="content-three">
         <div class="shopManage">门店管理</div>
@@ -37,11 +37,9 @@
           <el-table-column prop="address" label="地址"></el-table-column>
           <el-table-column prop="businessHours" label="营业时间"></el-table-column>
           <el-table-column prop="status" label="门店状态">
-            <template slot-scope="scope">
-              {{scope.row.status == 'N' ? '通过' : '拒绝'}}
-            </template>
+            <template slot-scope="scope">{{scope.row.status == 'N' ? '通过' : '拒绝'}}</template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width='200'>
+          <el-table-column fixed="right" label="操作" width="200">
             <!-- 编辑点击 -->
             <template slot-scope="scope">
               <el-button
@@ -51,10 +49,18 @@
               >
                 <i class="el-icon-edit"></i>
               </el-button>
-              <el-button style="box-shadow: 0 0 10px #d0d1d4" size="small" @click="deletes(scope.row,scope.$index)">
+              <el-button
+                style="box-shadow: 0 0 10px #d0d1d4"
+                size="small"
+                @click="deletes(scope.row,scope.$index)"
+              >
                 <i class="el-icon-delete"></i>
               </el-button>
-               <el-button style="box-shadow: 0 0 10px #d0d1d4" size="small" @click="changes(scope.row,scope.$index)">
+              <el-button
+                style="box-shadow: 0 0 10px #d0d1d4"
+                size="small"
+                @click="changes(scope.row,scope.$index)"
+              >
                 <i class="el-icon-sort"></i>
               </el-button>
             </template>
@@ -83,7 +89,7 @@
             <el-input v-model="form.phone" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="门店地址：" :label-width="formLabelWidth">
-            <el-input v-model="form.address" autocomplete="off"></el-input>
+            <el-input v-model="form.address" autocomplete="off" readonly @focus="inforMap"></el-input>
           </el-form-item>
           <el-form-item label="门店大图：" :label-width="formLabelWidth">
             <el-input v-model="form.headerImage" autocomplete="off"></el-input>
@@ -92,16 +98,34 @@
             <el-input v-model="form.pic" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="营业时间：" :label-width="formLabelWidth">
-            <el-input v-model="form.businessHours" autocomplete="off"></el-input>
+            <el-time-select
+              placeholder="起始时间"
+              v-model="startTime"
+                :picker-options="{
+                start: '00:00',
+                step: '00:15',
+                end: '24:00'
+              }"
+            ></el-time-select>
+            <el-time-select
+              placeholder="结束时间"
+              v-model="endTime"
+              :picker-options="{
+                start: '00:00',
+                step: '00:15',
+                end: '24:00',
+                minTime: startTime
+              }"
+            ></el-time-select>
           </el-form-item>
           <el-form-item label="门店介绍：" :label-width="formLabelWidth">
             <el-input v-model="form.introduce" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="门店经度：" :label-width="formLabelWidth">
-            <el-input v-model="form.longitude" autocomplete="off"></el-input>
+          <el-form-item label="门店经度：" :label-width="formLabelWidth"> 
+            <el-input v-model="form.longitude" autocomplete="off" readonly></el-input>
           </el-form-item>
           <el-form-item label="门店纬度：" :label-width="formLabelWidth">
-            <el-input v-model="form.latitude" autocomplete="off"></el-input>
+            <el-input v-model="form.latitude" autocomplete="off" readonly></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -110,6 +134,9 @@
         </div>
       </el-dialog>
     </div>
+    <el-dialog class="mapTankuang" title="门店地址" :visible.sync="dialogMap">
+      
+    </el-dialog>
   </div>
 </template>
 
@@ -124,21 +151,34 @@ export default {
       form: "",
       currentPage1: 5,
       dialogFormVisible: false,
+      dialogMap: false,
       formLabelWidth: "120px",
-      page: 1
+      page: 1,
+      startTime: "",
+      endTime: "",
+      time1: ""
     };
   },
   methods: {
+    inforMap(){
+      console.log(1)
+      this.dialogMap = true;
+    },
     // 编辑/新增按钮
     handleClick(row, index) {
-      this.dialogFormVisible = true;
       if (row) {
         this.form = JSON.parse(JSON.stringify(row));
+        this.time1 = this.form.businessHours.split("-");
+        this.startTime = this.time1[0];
+        this.endTime = this.time1[1];
+        // console.log(this.time1);
+        this.dialogFormVisible = true;
       } else {
         this.form = {};
+        this.dialogFormVisible = true;
       }
     },
-     // 删除门店按钮
+    // 删除门店按钮
     deletes(row, index) {
       getstorestate({
         sid: row.sid,
@@ -156,11 +196,11 @@ export default {
         }
       });
     },
-      // 修改门店状态
+    // 修改门店状态
     changes(row, index) {
       getstorestate({
         sid: row.sid,
-        status: row.status=="N"? "P":"N"
+        status: row.status == "N" ? "P" : "N"
       }).then(res => {
         console.log(res);
         if (res.code == 1) {
@@ -177,6 +217,7 @@ export default {
     // 修改数据
     dialogFormFalse() {
       this.dialogFormVisible = false;
+      this.form.businessHours = this.startTime + "-" + this.endTime;
       // console.log(this.form);
       getstores(this.form).then(res => {
         // console.log(res);
@@ -196,7 +237,7 @@ export default {
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
-      this.page = val
+      this.page = val;
       this.getstorelist();
     },
     getstorelist() {
@@ -252,5 +293,6 @@ export default {
   padding-left: 20px;
   margin-top: 20px;
 }
+
 </style>
 

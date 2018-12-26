@@ -4,7 +4,7 @@
     <div class="content-one">
       <span>车辆信息管理</span>
       <span>汽车信息管理列表</span>
-      <span class="one-right" @click="dialogAdd()">
+      <span class="one-right" @click="handleClick()">
         <el-button style="background:#3598dc;color:white;border-radius:4%" size="mini">
           <i class="el-icon-circle-plus-outline btn-font">新增汽车信息</i>
         </el-button>
@@ -106,45 +106,6 @@
           <el-button type="primary" @click="dialogFormFalse">确 定</el-button>
         </div>
       </el-dialog>
-      <!-- 新增详情 -->
-      <el-dialog title="编辑汽车信息" :visible.sync="dialogFormAdd">
-        <el-form :model="form">
-          <el-form-item label="图片：" :label-width="formLabelWidth">
-            <el-upload
-              class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="汽车名称：" :label-width="formLabelWidth">
-            <el-input v-model="form.carname" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="车身结构(如:两厢、三厢、SUV)：" :label-width="formLabelWidth">
-            <el-input v-model="form.jiegou" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="排量(如:1.5、1.6)：" :label-width="formLabelWidth">
-            <el-input v-model="form.pailiang" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="档位：" :label-width="formLabelWidth">
-            <el-select v-model="form.dangwei" placeholder="请选车辆档位">
-              <el-option label="自动" value="自动"></el-option>
-              <el-option label="手动" value="手动"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="乘坐人数" :label-width="formLabelWidth">
-            <el-input v-model="form.count" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormAdd = false">取 消</el-button>
-          <el-button type="primary" @click="dialogAddFalse()">确 定</el-button>
-        </div>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -194,31 +155,23 @@ export default {
       dialogFormVisible: false,
       dialogFormAdd: false,
       formLabelWidth: "230px",
-      imageUrl: "",
-      indexone: null
+      imageUrl: ""
     };
   },
   methods: {
     // 编辑按钮
     handleClick(row, index) {
-      this.dialogFormVisible = true;
-      this.form = JSON.parse(JSON.stringify(row));
-      this.indexone = index;
+      if (row) {
+        this.form = JSON.parse(JSON.stringify(row));
+        this.dialogFormVisible = true;
+      }else{
+        this.form = {};
+        this.dialogFormVisible = true;
+      }
     },
     // 修改数据
     dialogFormFalse() {
       this.dialogFormVisible = false;
-      this.$set(this.tableData, this.indexone, this.form);
-    },
-    // 新增按钮
-    dialogAdd() {
-      this.dialogFormAdd = true;
-      this.form = {};
-    },
-    // 增加数据
-    dialogAddFalse(){
-      this.dialogFormAdd = false;
-      this.tableData.push(this.form)
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);

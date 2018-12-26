@@ -120,6 +120,18 @@ export default {};
   box-shadow: 0 0 25px #cac6c6;
 }
 
+.two-infor {
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 0 25px #cac6c6;
+}
+
+.three-infor {
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 0 25px #cac6c6;
+}
+
 .three-infor > li > img {
   border-radius: 50%;
 }
@@ -148,6 +160,7 @@ ul > li {
 
 .infor-two-center{
     border-top: 1px solid #cac6c6;
+    text-align: center;
 }
 
 .infor-two-center p {

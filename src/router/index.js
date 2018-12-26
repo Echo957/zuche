@@ -9,6 +9,7 @@ import appointment from '@/components/nav4/appointment'
 import userInformations from '@/components/nav5/userInformations'
 import userLevel from '@/components/nav5/userLevel'
 import yueyudan from '@/components/nav4/yueyudan'
+import map from '@/components/public/map'
 
 
 Vue.use(Router)
@@ -87,6 +88,10 @@ export default new Router({
           path: '/userLevel',
           name: 'userLevel',
           component: userLevel
+        },{
+          path: '/map',
+          name: 'map',
+          component: map
         }
       ]
     }

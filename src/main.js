@@ -9,11 +9,15 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import './assets/icon/iconfont.css'
 import echarts from 'echarts'
+import BaiduMap from 'vue-baidu-map'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(VueAxios, axios)
 Vue.use(echarts)
+Vue.use(BaiduMap,{
+  ak: 'CSsgIcYqtBv85NSuNs7lDh5jjZCIy9rP'
+})
 Vue.prototype.$echarts=echarts
 
 // 路由守卫
